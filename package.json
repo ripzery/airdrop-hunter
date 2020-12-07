@@ -1,0 +1,15 @@
+{
+  "name": "airdrop-hunter",
+  "version": "1.0.0",
+  "description": "Hunt for potential airdrop project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "defi",
+    "airdrop"
+  ],
+  "author": "Phuchit Sirimongkolsathien",
+  "license": "ISC"
+}
