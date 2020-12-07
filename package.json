@@ -22,8 +22,10 @@
   "license": "ISC",
   "dependencies": {
     "@dydxprotocol/solo": "^0.39.2",
+    "bignumber.js": "^9.0.1",
     "dotenv": "^8.2.0",
-    "web3": "^1.3.0"
+    "web3": "^1.3.0",
+    "web3-utils": "^1.3.0"
   },
   "devDependencies": {
     "tslint": "^6.1.3",

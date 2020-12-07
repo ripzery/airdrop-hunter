@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import {Account} from './types';
+import { Account } from './types';
 import fs from 'fs'
 
 // Generate Accounts and Write Log
@@ -11,7 +11,7 @@ export default class AccountFactory {
   constructor(outputPath: string) {
     this.outputPath = outputPath;
     this.web3 = new Web3(
-      'https://mainnet.infura.io/v3/' + process.env.INFURA_API_KEY
+      `https://${process.env.CHAIN}.infura.io/v3/${process.env.INFURA_API_KEY}`
     );
   }
 
@@ -24,7 +24,7 @@ export default class AccountFactory {
     this.saveToFile();
   }
 
-  private saveToFile() {
+  saveToFile() {
     fs.writeFileSync(this.outputPath, JSON.stringify(this.accounts, null, 2))
   }
 }
