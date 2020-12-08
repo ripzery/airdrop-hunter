@@ -4,27 +4,25 @@ import fs from 'fs'
 
 // Generate Accounts and Write Log
 export default class AccountFactory {
-  outputPath: string;
   web3: Web3;
   accounts: Account[] = [];
 
-  constructor(outputPath: string) {
-    this.outputPath = outputPath;
+  constructor() {
     this.web3 = new Web3(
       `https://${process.env.CHAIN}.infura.io/v3/${process.env.INFURA_API_KEY}`
     );
   }
 
-  createAccount(total: number) {
+  createAccount(total: number, outputPath: string = './recipients') {
     this.accounts = [];
     for (let i = 0; i < total; i++) {
       const {address, privateKey} = this.web3.eth.accounts.create();
       this.accounts.push({address, privateKey});
     }
-    this.saveToFile();
+    this.saveToFile(outputPath);
   }
 
-  saveToFile() {
-    fs.writeFileSync(this.outputPath, JSON.stringify(this.accounts, null, 2))
+  saveToFile(outputPath: string = './recipients') {
+    fs.writeFileSync(outputPath, JSON.stringify(this.accounts, null, 2))
   }
 }

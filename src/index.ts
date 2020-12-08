@@ -5,8 +5,8 @@ import BN from 'bignumber.js'
 import { Account } from './types';
 
 const sender: Account = { address: process.env.SENDER_ADDRESS || '', privateKey: process.env.SENDER_PRIVATE_KEY || '' }
-const factory = new AccountFactory('./output.json');
-factory.createAccount(100);
+const factory = new AccountFactory();
+factory.createAccount(8, './recipients.json');
 const multisender = new MultiSender(sender, factory.accounts)
 
 async function send() {
