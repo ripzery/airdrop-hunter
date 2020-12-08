@@ -1,12 +1,14 @@
 import { Account } from "./types";
 import Web3 from 'web3'
-import { erc20Abi, multiSenderAbi } from './abi'
+import { multiSenderAbi } from './abi'
 import BN from 'bignumber.js'
+import Transaction from './utils/transaction'
 
 export default class MultiSender {
   sender: Account
   recipients: Account[]
   web3: Web3
+  transaction: Transaction
 
   constructor(
     sender: Account,
@@ -17,10 +19,7 @@ export default class MultiSender {
     this.web3 = new Web3(
       `https://${process.env.CHAIN}.infura.io/v3/${process.env.INFURA_API_KEY}`
     );
-  }
-
-  approve(token: string) {
-    const contractErc20 = new this.web3.eth.Contract(erc20Abi, token)
+    this.transaction = new Transaction()
   }
 
   async sendEther(ethPerWallet: BN) {
@@ -36,12 +35,8 @@ export default class MultiSender {
       from: this.sender.address,
       data,
       value,
-      to: process.env.MULTISENDER_CONTRACT
+      to: process.env.MULTISENDER_CONTRACT || ''
     }
-    console.log(txDetails)
-    const gas = await this.web3.eth.estimateGas(txDetails)
-    const signedTx = await this.web3.eth.accounts.signTransaction({...txDetails, gas: gas + 100000, gasPrice: '1000000000'}, this.sender.privateKey)
-    const tx = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction || '')
-    console.log(tx)
+    await this.transaction.send(txDetails, this.sender.privateKey)
   }
 }
