@@ -3,6 +3,7 @@ import Web3 from 'web3'
 import { multiSenderAbi } from './abi'
 import BN from 'bignumber.js'
 import Transaction from './utils/transaction'
+import { saveToFile } from './utils/file'
 
 export default class MultiSender {
   sender: Account
@@ -22,7 +23,7 @@ export default class MultiSender {
     this.transaction = new Transaction()
   }
 
-  async sendEther(ethPerWallet: BN) {
+  async sendEther(ethPerWallet: BN, outputPath: string) {
     const contractMultiSender = new this.web3.eth.Contract(multiSenderAbi, process.env.MULTISENDER_CONTRACT)
     const values = new Array(this.recipients.length).fill(ethPerWallet)
     const data = contractMultiSender.methods.multisend(this.recipients.map(recipient => recipient.address), values).encodeABI({
@@ -37,6 +38,18 @@ export default class MultiSender {
       value,
       to: process.env.MULTISENDER_CONTRACT || ''
     }
-    await this.transaction.send(txDetails, this.sender.privateKey)
+    return this.transaction.send(txDetails, this.sender.privateKey)
+      .then(result => {
+        return {
+          from: result.from,
+          to: result.to,
+          transactionHash: result.transactionHash,
+          gasUsed: result.gasUsed
+        }
+      })
+      .then(result => {
+        saveToFile(result, outputPath)
+        return result
+      })
   }
 }

@@ -14,12 +14,7 @@ export default class Transaction {
 
   async send(txDetails: TxDetails, privateKey: string) {
     const gas = await this.web3.eth.estimateGas(txDetails)
-
-    console.log('Estimate Gas:', gas)
-
     const signedTx = await this.web3.eth.accounts.signTransaction({...txDetails, gas, gasPrice: this.gasPrice}, privateKey)
-    const tx = await this.web3.eth.sendSignedTransaction(signedTx.rawTransaction || '')
-
-    console.log(tx)
+    return this.web3.eth.sendSignedTransaction(signedTx.rawTransaction || '')
   }
 }
