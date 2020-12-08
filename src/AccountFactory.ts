@@ -1,7 +1,6 @@
 import Web3 from 'web3';
 import { Account } from './types';
-import fs from 'fs'
-
+import { saveToFile } from './utils/file'
 // Generate Accounts and Write Log
 export default class AccountFactory {
   web3: Web3;
@@ -19,10 +18,6 @@ export default class AccountFactory {
       const {address, privateKey} = this.web3.eth.accounts.create();
       this.accounts.push({address, privateKey});
     }
-    this.saveToFile(outputPath);
-  }
-
-  saveToFile(outputPath: string = './recipients') {
-    fs.writeFileSync(outputPath, JSON.stringify(this.accounts, null, 2))
+    saveToFile(this.accounts, outputPath);
   }
 }

@@ -1,5 +1,7 @@
 import { Solo, Networks, BigNumber, MarketId, AccountNumbers } from '@dydxprotocol/solo';
 import { Account } from '../types'
+import { saveToFile } from '../utils/file'
+
 export default class DyDx {
   client: Solo
   accounts: Account[]
@@ -23,12 +25,23 @@ export default class DyDx {
       accountNumber: AccountNumbers.SPOT,
       amount: new BigNumber(amount),
       marketId: MarketId.ETH,
+    }).then(result => {
+      return {
+        from: result.from,
+        to: result.to,
+        transactionHash: result.transactionHash,
+        gasUsed: result.gasUsed
+      }
     })
   }
 
-  batchDeposit(amount: string) {
+  batchDeposit(amount: string, outputPath: string) {
     const pending = this.accounts.map(account => this.deposit(account, amount))
     return Promise.all(pending)
+    .then(results => {
+      saveToFile(results, outputPath)
+      return results
+    })
   }
 
   private getNetwork() {

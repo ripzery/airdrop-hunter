@@ -3,15 +3,24 @@ import AccountFactory from './AccountFactory'
 import MultiSender from './MultiSender';
 import BN from 'bignumber.js'
 import { Account } from './types';
+import DyDx from './target/DyDx';
+
+const amountToSend = '1000000000000000'
+const totalAccounts = 5
+const outputPathDyDx = './output/result-dydx.json'
+const outputPathAccounts = './output/recipients.json'
 
 const sender: Account = { address: process.env.SENDER_ADDRESS || '', privateKey: process.env.SENDER_PRIVATE_KEY || '' }
 const factory = new AccountFactory();
-factory.createAccount(8, './recipients.json');
+factory.createAccount(totalAccounts, outputPathAccounts);
 const multisender = new MultiSender(sender, factory.accounts)
+const dydx = new DyDx(factory.accounts)
 
-async function send() {
-  await multisender.sendEther(new BN('10000000000000000'))
+async function execute() {
+  await multisender.sendEther(new BN(amountToSend + '0'))
+  const results = await dydx.batchDeposit(amountToSend, outputPathDyDx)
+  console.log(results)
   process.exit(0)
 }
 
-send()
+execute()
