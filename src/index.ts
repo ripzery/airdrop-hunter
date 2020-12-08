@@ -28,7 +28,7 @@ async function execute() {
   console.log(`${amountToSend} wei was sent to ${totalAccounts} accounts!`, outputPathMultiSender)
   console.log('\n=================\n')
   console.log('Batch depositing to DyDx...')
-  const results = await dydx.batchDeposit(amountToSend, outputPathDyDx)
+  await dydx.batchDeposit(amountToSend, outputPathDyDx)
   console.log('Deposit completed!', outputPathDyDx)
   console.log('\nDone.')
   process.exit(0)

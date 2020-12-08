@@ -5,7 +5,7 @@ export default class Transaction {
   private web3: Web3
   gasPrice: string
 
-  constructor(gasPrice: string = '1000000000') {
+  constructor(gasPrice: string = '31000000000') {
     this.web3 = new Web3(
       `https://${process.env.CHAIN}.infura.io/v3/${process.env.INFURA_API_KEY}`
     );

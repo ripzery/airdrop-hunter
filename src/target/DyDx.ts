@@ -23,7 +23,7 @@ export default class DyDx {
     return this.client.standardActions.deposit({
       accountOwner: account.address,
       accountNumber: AccountNumbers.SPOT,
-      amount: new BigNumber(amount),
+      amount: new BigNumber(amount).div(2),
       marketId: MarketId.ETH,
     }).then(result => {
       return {
