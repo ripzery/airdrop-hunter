@@ -13,14 +13,24 @@ const outputPathAccounts = './output/recipients.json'
 
 const sender: Account = { address: process.env.SENDER_ADDRESS || '', privateKey: process.env.SENDER_PRIVATE_KEY || '' }
 const factory = new AccountFactory();
+
+console.log('\n===== BEGIN =====\n')
+console.log('Creating accounts...')
 factory.createAccount(totalAccounts, outputPathAccounts);
+console.log(`${totalAccounts} accounts created!`, outputPathAccounts)
 const multisender = new MultiSender(sender, factory.accounts)
 const dydx = new DyDx(factory.accounts)
 
 async function execute() {
+  console.log('\n=================\n')
+  console.log('Splitting ETH...')
   await multisender.sendEther(new BN(amountToSend + '0'), outputPathMultiSender)
+  console.log(`${amountToSend} wei was sent to ${totalAccounts} accounts!`, outputPathMultiSender)
+  console.log('\n=================\n')
+  console.log('Batch depositing to DyDx...')
   const results = await dydx.batchDeposit(amountToSend, outputPathDyDx)
-  console.log(results)
+  console.log('Deposit completed!', outputPathDyDx)
+  console.log('\nDone.')
   process.exit(0)
 }
 
