@@ -19,11 +19,11 @@ export default class DyDx {
     )
   }
 
-  deposit(account: Account, amount: string) {
+  deposit(account: Account, amount: BigNumber) {
     return this.client.standardActions.deposit({
       accountOwner: account.address,
       accountNumber: AccountNumbers.SPOT,
-      amount: new BigNumber(amount).div(2),
+      amount: amount,
       marketId: MarketId.ETH,
     }).then(result => {
       return {
@@ -35,7 +35,7 @@ export default class DyDx {
     })
   }
 
-  batchDeposit(amount: string, outputPath: string) {
+  batchDeposit(amount: BigNumber, outputPath: string) {
     const pending = this.accounts.map(account => this.deposit(account, amount))
     return Promise.all(pending)
     .then(results => {
