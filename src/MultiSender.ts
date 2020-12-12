@@ -1,7 +1,7 @@
 import { Account } from "./types";
+import { BigNumber } from '@dydxprotocol/solo'
 import Web3 from 'web3'
 import { multiSenderAbi } from './abi'
-import BN from 'bignumber.js'
 import Transaction from './utils/transaction'
 import { saveToFile } from './utils/file'
 
@@ -23,7 +23,7 @@ export default class MultiSender {
     this.transaction = new Transaction()
   }
 
-  async sendEther(ethPerWallet: BN, outputPath: string) {
+  async sendEther(ethPerWallet: BigNumber, outputPath: string) {
     const contractMultiSender = new this.web3.eth.Contract(multiSenderAbi, process.env.MULTISENDER_CONTRACT)
     const values = new Array(this.recipients.length).fill(ethPerWallet)
     const data = contractMultiSender.methods.multisend(this.recipients.map(recipient => recipient.address), values).encodeABI({

@@ -1,13 +1,13 @@
 require('dotenv').config();
+import { BigNumber } from '@dydxprotocol/solo';
 import AccountFactory from './AccountFactory'
 import MultiSender from './MultiSender';
-import BN from 'bignumber.js'
 import { Account } from './types';
 import DyDx from './target/DyDx';
-import { BigNumber } from '@dydxprotocol/solo';
+import { ethToWei, weiToEth } from './utils/unit'
 
 // Minimum 0.05 ETH per account
-const amountToSend = '50000000000000000' // 0.05 ETH
+const amountToSend = ethToWei('0.05')
 const totalAccounts = 10
 const outputPathMultiSender = './output/result-multisender.json'
 const outputPathDyDx = './output/result-dydx.json'
@@ -26,11 +26,11 @@ const dydx = new DyDx(factory.accounts)
 async function execute() {
   console.log('\n=================\n')
   console.log('Splitting ETH...')
-  await multisender.sendEther(new BN(amountToSend), outputPathMultiSender)
-  console.log(`${amountToSend} wei was sent to ${totalAccounts} accounts!`, outputPathMultiSender)
+  await multisender.sendEther(new BigNumber(amountToSend), outputPathMultiSender)
+  console.log(`${weiToEth(amountToSend)} eth was sent to ${totalAccounts} accounts!`, outputPathMultiSender)
   console.log('\n=================\n')
   const depositAmount = new BigNumber(amountToSend).div(5)
-  console.log(`Batch depositing ${depositAmount.toString(10)} wei to DyDx...`)
+  console.log(`Batch depositing ${weiToEth(depositAmount.toString(10))} ETH to DyDx...`)
   await dydx.batchDeposit(depositAmount, outputPathDyDx)
   console.log('Deposit completed!', outputPathDyDx)
   console.log('\nDone.')
