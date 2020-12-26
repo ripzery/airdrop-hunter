@@ -1,4 +1,4 @@
-import { Account } from "./types";
+import { Account, TransactionOption } from "./types";
 import { BigNumber } from '@dydxprotocol/solo'
 import Web3 from 'web3'
 import { multiSenderAbi } from './abi'
@@ -13,14 +13,15 @@ export default class MultiSender {
 
   constructor(
     sender: Account,
-    recipients: Account[]
+    recipients: Account[],
+    options: TransactionOption
   ) {
     this.sender = sender
     this.recipients = recipients;
     this.web3 = new Web3(
       `https://${process.env.CHAIN}.infura.io/v3/${process.env.INFURA_API_KEY}`
     );
-    this.transaction = new Transaction()
+    this.transaction = new Transaction(options)
   }
 
   async sendEther(ethPerWallet: BigNumber, outputPath: string) {
