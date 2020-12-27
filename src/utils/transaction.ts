@@ -21,6 +21,7 @@ export default class Transaction {
     } else {
       gas = parseInt(txDetails.gas) + 50000
     }
+
     const signedTx = await this.web3.eth.accounts.signTransaction({...txDetails, gas, gasPrice: this.gasPrice}, privateKey)
     return this.web3.eth.sendSignedTransaction(signedTx.rawTransaction || '')
   }

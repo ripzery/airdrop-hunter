@@ -3,5 +3,5 @@ const multiSenderAbi = require('./multisender.json')
 
 export {
   erc20Abi,
-  multiSenderAbi
+  multiSenderAbi,
 }

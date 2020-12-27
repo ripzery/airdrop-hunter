@@ -8,7 +8,7 @@ export interface Account {
 export interface TxDetails {
   from: string;
   data: string;
-  value: string;
+  value?: string;
   to: string;
   gas?: string;
   gasPrice?: string;
