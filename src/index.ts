@@ -5,6 +5,7 @@ import MultiSender from './MultiSender';
 import { Account } from './types';
 import DyDx from './target/DyDx';
 import Matcha from './target/Matcha'
+import Transfer from './Transfer'
 import { ethToWei, weiToEth, gweiToWei } from './utils/unit'
 import chalk from 'chalk';
 
@@ -12,10 +13,10 @@ import chalk from 'chalk';
 const amountToSend = ethToWei('0.1')
 
 // Number of accounts to create
-const totalAccounts = 25
+const totalAccounts = 10
 
 // Gas price for multi sender
-const gasPrice = gweiToWei('91')
+const gasPrice = gweiToWei('51')
 
 // A wallet which will distribute tokens to multiple wallets
 const sender: Account = { address: process.env.SENDER_ADDRESS || '', privateKey: process.env.SENDER_PRIVATE_KEY || '' }
@@ -104,28 +105,40 @@ function validate_params() {
 }
 
 async function withdraw(accounts: Account[]) {
-  const outputSendUsdt = './output/matcha/result-withdraw.json'
-  const matcha = new Matcha(accounts)
+  const outputSendUsdt = './output/collect/result-withdraw.json'
+  const transfer = new Transfer()
 
   console.log('\n=================\n')
   console.log(chalk.greenBright('Batch Withdrawal USDT to ' + process.env.SENDER_ADDRESS + ' ...\n'))
 
-  await matcha.sendUSDTBack({ gasPrice }, outputSendUsdt)
+  await transfer.sendUSDT(accounts, { gasPrice }, outputSendUsdt)
 
   console.log('\nDone.')
   process.exit(0)
 }
 
-function execute() {
-
-  // execute_dydx()
-
-  // Amount to trade on matcha for each account
-  //   const amount = '25' // 25 USDT
-  //   execute_matcha(amount)
-
-  const accounts = require('../output/matcha/recipients.json')
-  withdraw(accounts)
+async function withdraw_eth(accounts: Account[]) {
+  const outputCollectEth = './output/collect/result-withdraw-eth.json'
 }
 
-execute()
+async function create_metamask_accounts() {
+  const outputPathAccounts = './output/metamask/recipients.json'
+
+  console.log('\n===== BEGIN =====\n')
+  console.log(chalk.greenBright(`1. Creating ${totalAccounts} accounts...\n`))
+  const factory = new AccountFactory();
+  factory.createAccount(totalAccounts, outputPathAccounts);
+
+  console.log('\n=================\n')
+  console.log(chalk.greenBright('2. Splitting ETH...\n'))
+  const outputPathMultiSender = './output/metamask/result-multisender.json'
+
+  const multisender = new MultiSender(sender, factory.accounts, { gasPrice })
+  await multisender.sendEther(new BigNumber(amountToSend), outputPathMultiSender)
+  console.log(`> ${weiToEth(amountToSend)} eth was sent to ${totalAccounts} accounts!`, outputPathMultiSender)
+
+  console.log('\nDone.')
+  process.exit(0)
+}
+
+create_metamask_accounts()

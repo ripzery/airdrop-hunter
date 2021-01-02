@@ -52,45 +52,4 @@ export default class Matcha {
       return result
     })
   }
-
-  async sendUSDTBack(option: TransactionOption, outputPathSendUsdt: string) {
-    const usdt = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
-    const contract = new this.web3.eth.Contract(erc20Abi, usdt)
-
-    const balances = await Promise.all(this.accounts
-      .map(({ address }) => contract.methods.balanceOf(address).call())
-      ).then(balances => balances.filter(balance => parseInt(balance) > parseInt(usdtToWei('2'))))
-
-    console.log(balances)
-
-    const pendingTxs = balances.map((balance, index) => {
-      const encodedAbi = contract.methods.transfer(process.env.SENDER_ADDRESS, balance).encodeABI()
-      const txDetails = {
-        from: this.accounts[index].address,
-        to: usdt,
-        data: encodedAbi
-      }
-
-      const transaction = new Transaction(option)
-      return transaction.send(txDetails, this.accounts[index].privateKey)
-      .then(result => {
-        return {
-          from: result.from,
-          to: result.to,
-          transactionHash: result.transactionHash,
-          gasUsed: result.gasUsed
-        }
-      })
-    })
-
-    return await Promise.all(pendingTxs)
-    .then(result => {
-      saveToFile(result, outputPathSendUsdt)
-      return result
-    })
-  }
-
-  sendETHBack() {
-
-  }
 }
