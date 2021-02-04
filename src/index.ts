@@ -9,17 +9,53 @@ import Transfer from './Transfer'
 import { ethToWei, weiToEth, gweiToWei } from './utils/unit'
 import chalk from 'chalk';
 
-// Minimum 0.05 ETH per account
-const amountToSend = ethToWei('0.1')
+// Minimum 0.003 ETH per account
+const amountToSend = ethToWei('0.003')
 
 // Number of accounts to create
 const totalAccounts = 10
 
 // Gas price for multi sender
-const gasPrice = gweiToWei('51')
+const gasPrice = gweiToWei('24')
 
 // A wallet which will distribute tokens to multiple wallets
 const sender: Account = { address: process.env.SENDER_ADDRESS || '', privateKey: process.env.SENDER_PRIVATE_KEY || '' }
+
+// BSC chain
+async function execute_icecream() {
+  // Output path for multi-sender bnb transaction
+  const outputPathMultiSenderBnb = './output/icecream/result-multisender-bnb.json'
+
+  // Output path for multi-sender kebab transaction
+  const outputPathMultiSenderKebab = './output/icecream/result-multisender-kebab.json'
+
+  // Output path for accounts creation.
+  const outputPathAccounts = './output/icecream/recipients.json'
+
+  validate_params()
+
+  console.log('\n===== BEGIN =====\n')
+  console.log(chalk.greenBright(`1. Creating ${totalAccounts} accounts...\n`))
+  const factory = new AccountFactory();
+  factory.createAccount(totalAccounts, outputPathAccounts);
+  console.log(`> ${totalAccounts} accounts created!`, outputPathAccounts)
+
+  const multisender = new MultiSender(sender, factory.accounts, { gasPrice })
+
+  console.log('\n=================\n')
+  console.log(chalk.greenBright('2. Splitting BNB...\n'))
+  await multisender.sendEther(new BigNumber(amountToSend), outputPathMultiSenderBnb)
+  console.log(`> ${weiToEth(amountToSend)} eth was sent to ${totalAccounts} accounts!`, outputPathMultiSenderBnb)
+
+
+  console.log('\n=================\n')
+  console.log(chalk.greenBright('3. Splitting Kebab...\n'))
+  await multisender.sendEther(new BigNumber(amountToSend), outputPathMultiSenderKebab)
+  console.log(`> ${weiToEth(amountToSend)} eth was sent to ${totalAccounts} accounts!`, outputPathMultiSenderKebab)
+
+  console.log('\nDone.')
+  process.exit(0)
+}
 
 async function execute_dydx() {
   // Output path for multi-sender transaction
@@ -95,7 +131,7 @@ async function execute_matcha(amount: string) {
 }
 
 function validate_params() {
-  if(parseFloat(amountToSend) < parseFloat(ethToWei('0.05'))) {
+  if(parseFloat(amountToSend) < parseFloat(ethToWei('0.003'))) {
     throw new Error(chalk.redBright('Too low amount for each wallet. Require minimum 0.05 ETH per wallet.'))
   }
 

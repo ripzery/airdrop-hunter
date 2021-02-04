@@ -53,4 +53,8 @@ export default class MultiSender {
         return result
       })
   }
+
+  async sendErc20() {
+    
+  }
 }
