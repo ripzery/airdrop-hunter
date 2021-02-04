@@ -13,7 +13,7 @@ import chalk from 'chalk';
 const amountToSend = ethToWei('0.003')
 
 // Number of accounts to create
-const totalAccounts = 10
+const totalAccounts = 3
 
 // Gas price for multi sender
 const gasPrice = gweiToWei('24')
@@ -48,10 +48,10 @@ async function execute_icecream() {
   console.log(`> ${weiToEth(amountToSend)} eth was sent to ${totalAccounts} accounts!`, outputPathMultiSenderBnb)
 
 
-  console.log('\n=================\n')
-  console.log(chalk.greenBright('3. Splitting Kebab...\n'))
-  await multisender.sendEther(new BigNumber(amountToSend), outputPathMultiSenderKebab)
-  console.log(`> ${weiToEth(amountToSend)} eth was sent to ${totalAccounts} accounts!`, outputPathMultiSenderKebab)
+  // console.log('\n=================\n')
+  // console.log(chalk.greenBright('3. Splitting Kebab...\n'))
+  // await multisender.sendEther(new BigNumber(amountToSend), outputPathMultiSenderKebab)
+  // console.log(`> ${weiToEth(amountToSend)} eth was sent to ${totalAccounts} accounts!`, outputPathMultiSenderKebab)
 
   console.log('\nDone.')
   process.exit(0)
@@ -178,4 +178,4 @@ async function create_metamask_accounts() {
   process.exit(0)
 }
 
-create_metamask_accounts()
+execute_icecream()

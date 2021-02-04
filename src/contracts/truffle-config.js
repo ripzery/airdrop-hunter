@@ -29,10 +29,26 @@ module.exports = {
     // timeout: 100000
   },
 
+  plugins: [
+    'truffle-plugin-verify'
+  ],
+
+  api_keys: {
+    'etherscan': "VCKWHFAA6M5AR8SFVXC43DEMEA8JN2H3WZ",
+    'bscscan': "X878A9QFMVJV5D3EWS141XSN4BYBVCFXKN" 
+  },
   // Configure your compilers
   compilers: {
     solc: {
-      version: "0.7.0"
-    }
-  }
+      version: "0.7.4",
+      settings: {          // See the solidity docs for advice about optimization and evmVersion
+        optimizer: {
+          enabled: false,
+          runs: 200
+        },
+        evmVersion: "byzantium"
+       }
+    },
+  },
+  
 }

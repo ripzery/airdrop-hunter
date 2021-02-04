@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.7.0;
+pragma solidity 0.7.4;
 import './SafeMath.sol';
-
 
 abstract contract ERC20Basic {
     function totalSupply() virtual public view returns (uint256);
@@ -23,6 +22,7 @@ contract EtherMultiSender {
         public
         payable
     {
+        //test
         uint256 total = msg.value;
         uint256 i = 0;
         for (i; i < _recipients.length; i++) {

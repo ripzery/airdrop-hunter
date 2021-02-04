@@ -18,10 +18,9 @@ export default class MultiSender {
   ) {
     this.sender = sender
     this.recipients = recipients;
-    this.web3 = new Web3(
-      `https://${process.env.CHAIN}.infura.io/v3/${process.env.INFURA_API_KEY}`
-    );
+    this.web3 = new Web3(process.env.TESTNET_PROVIDER || '');
     this.transaction = new Transaction(options)
+    console.log(process.env.TESTNET_PROVIDER)
   }
 
   async sendEther(ethPerWallet: BigNumber, outputPath: string) {
@@ -30,6 +29,7 @@ export default class MultiSender {
     const data = contractMultiSender.methods.multisend(this.recipients.map(recipient => recipient.address), values).encodeABI({
       from: this.sender.address,
     })
+    console.log(data)
     const value = ethPerWallet
       .multipliedBy(this.recipients.length)
       .toString()
@@ -39,6 +39,7 @@ export default class MultiSender {
       value,
       to: process.env.MULTISENDER_CONTRACT || ''
     }
+    console.log(txDetails)
     return this.transaction.send(txDetails, this.sender.privateKey)
       .then(result => {
         return {

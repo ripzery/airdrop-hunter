@@ -14,6 +14,7 @@
     "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {
-    "truffle-flattener": "^1.5.0"
+    "truffle-flattener": "^1.5.0",
+    "truffle-plugin-verify": "^0.5.4"
   }
 }

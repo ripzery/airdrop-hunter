@@ -12,7 +12,9 @@
     "start": "npx ts-node src/index.ts",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run lint"
+    "posttest": "npm run lint",
+    "deploy:testnet": "cd src/contracts && truffle migrate --network testnet && cdq ../..",
+    "deploy:prod": "cd src/contracts && truffle migrate --network bsc && cd ../.."
   },
   "keywords": [
     "defi",
