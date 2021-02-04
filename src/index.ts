@@ -104,6 +104,7 @@ function validate_params() {
   }
 }
 
+// Aggregates back to account
 async function withdraw(accounts: Account[]) {
   const outputSendUsdt = './output/collect/result-withdraw.json'
   const transfer = new Transfer()
