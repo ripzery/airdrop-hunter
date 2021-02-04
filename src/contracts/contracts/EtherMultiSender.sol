@@ -35,13 +35,10 @@ contract EtherMultiSender {
     function multisendErc20(address token, address payable[] memory _recipients, uint256[] memory _balances) public payable {
         require(_recipients.length <= 200);
 
-        uint total = 0;
         uint256 i = 0;
         ERC20 erc20 = ERC20(token);
 
         for(i; i < _recipients.length; i++) {
-            require(total >= _balances[i]);
-            total = total - _balances[i];
             erc20.transferFrom(msg.sender, _recipients[i], _balances[i]);
         }
     }

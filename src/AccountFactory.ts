@@ -7,7 +7,7 @@ export default class AccountFactory {
   accounts: Account[] = [];
 
   constructor() {
-    this.web3 = new Web3(process.env.TESTNET_PROVIDER || '');
+    this.web3 = new Web3(process.env.PROVIDER || '');
   }
 
   createAccount(total: number, outputPath: string = './recipients') {

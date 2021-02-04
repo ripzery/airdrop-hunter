@@ -13,21 +13,18 @@ export default class Transfer {
       `https://${process.env.CHAIN}.infura.io/v3/${process.env.INFURA_API_KEY}`)
   }
 
-  async sendUSDT(accounts: Account[], option: TransactionOption, outputPathSendUsdt: string) {
-    const usdt = '0xdAC17F958D2ee523a2206206994597C13D831ec7'
-    const contract = new this.web3.eth.Contract(erc20Abi, usdt)
+  async sendBackTokens(token: string, accounts: Account[], option: TransactionOption, outputPathSendUsdt: string) {
+    const contract = new this.web3.eth.Contract(erc20Abi, token)
 
     const balances = await Promise.all(accounts
       .map(({ address }) => contract.methods.balanceOf(address).call())
       ).then(balances => balances.filter(balance => parseInt(balance) > parseInt(usdtToWei('2'))))
 
-    console.log(balances)
-
     const pendingTxs = balances.map((balance, index) => {
       const encodedAbi = contract.methods.transfer(process.env.SENDER_ADDRESS, balance).encodeABI()
       const txDetails = {
         from: accounts[index].address,
-        to: usdt,
+        to: token,
         data: encodedAbi
       }
 
